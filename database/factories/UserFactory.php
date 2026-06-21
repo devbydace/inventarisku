@@ -24,4 +24,14 @@ class UserFactory extends Factory
             'is_active' => fake()->boolean(90),
         ];
     }
+
+    /**
+     * Configure the factory to assign Spatie role after creating.
+     */
+    public function configure(): static
+    {
+        return $this->afterCreating(function (\App\Models\User $user) {
+            $user->assignRole($user->role);
+        });
+    }
 }

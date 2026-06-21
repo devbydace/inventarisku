@@ -108,8 +108,8 @@ Route::middleware(['auth', 'user.active', 'role:admin'])->prefix('admin')->name(
 |--------------------------------------------------------------------------
 | Manager / Audit Routes
 |--------------------------------------------------------------------------
-*/
-Route::middleware(['auth', 'user.active', 'role:manager,audit'])->prefix('approvals')->name('approvals.')->group(function () {
+| */
+Route::middleware(['auth', 'user.active', 'role:admin,manager,audit'])->prefix('approvals')->name('approvals.')->group(function () {
     Route::get('/', function () {
         return 'Approvals - under construction';
     })->middleware('permission:approve-transaction');

@@ -22,7 +22,8 @@ class RoleMiddleware
 
         $user = Auth::user();
 
-        if (!in_array($user->role, $roles)) {
+        // Check using Spatie's hasAnyRole
+        if (!$user->hasAnyRole($roles)) {
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
 
