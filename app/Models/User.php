@@ -9,13 +9,14 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 #[Fillable(['name', 'email', 'password', 'role', 'is_active'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * Available roles in the system.
@@ -29,23 +30,27 @@ class User extends Authenticatable
     ];
 
     /**
-     * Check if the user has a specific role.
+     * Check if the user has a role column value matching the given role.
+     * Note: This checks the `role` column, NOT Spatie's hasRole().
+     * For Spatie role checking, use $user->hasRole() from HasRoles trait.
      */
-    public function hasRole(string $role): bool
+    public function hasRoleColumn(string $role): bool
     {
         return $this->role === $role;
     }
 
     /**
-     * Check if the user has any of the given roles.
+     * Check if the user has any of the given role column values.
+     * Note: This checks the `role` column, NOT Spatie's hasAnyRole().
+     * For Spatie role checking, use $user->hasAnyRole() from HasRoles trait.
      */
-    public function hasAnyRole(array $roles): bool
+    public function hasAnyRoleColumn(array $roles): bool
     {
         return in_array($this->role, $roles);
     }
 
     /**
-     * Check if the user is an admin.
+     * Check if the user is an admin (by role column).
      */
     public function isAdmin(): bool
     {
@@ -53,7 +58,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if the user is a cashier.
+     * Check if the user is a cashier (by role column).
      */
     public function isKasir(): bool
     {
@@ -61,7 +66,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if the user is an auditor.
+     * Check if the user is an auditor (by role column).
      */
     public function isAudit(): bool
     {
@@ -69,7 +74,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if the user is a manager.
+     * Check if the user is a manager (by role column).
      */
     public function isManager(): bool
     {
@@ -77,7 +82,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if the user is a staff member.
+     * Check if the user is a staff member (by role column).
      */
     public function isStaffToko(): bool
     {

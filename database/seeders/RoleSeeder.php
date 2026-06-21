@@ -3,23 +3,22 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class RoleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     *
+     * Note: This seeder is kept for backward compatibility.
+     * PermissionSeeder is the primary seeder for roles and permissions.
      */
     public function run(): void
     {
-        $roles = [
-            ['name' => 'admin', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'kasir', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'audit', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'manager', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'staff_toko', 'created_at' => now(), 'updated_at' => now()],
-        ];
+        $roles = ['admin', 'kasir', 'audit', 'manager', 'staff_toko'];
 
-        DB::table('roles')->insert($roles);
+        foreach ($roles as $roleName) {
+            Role::firstOrCreate(['name' => $roleName]);
+        }
     }
 }

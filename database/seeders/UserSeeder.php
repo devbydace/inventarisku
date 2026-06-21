@@ -13,12 +13,19 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'name' => 'Admin',
-            'email' => 'admin@inventaris.test',
-            'password' => Hash::make('password'),
-            'role' => 'admin',
-            'is_active' => true,
-        ]);
+        $user = User::updateOrCreate(
+            ['email' => 'admin@inventaris.test'],
+            [
+                'name' => 'Admin',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+                'is_active' => true,
+            ]
+        );
+
+        // Assign Spatie role and sync all permissions
+        if (!$user->hasRole('admin')) {
+            $user->assignRole('admin');
+        }
     }
 }
