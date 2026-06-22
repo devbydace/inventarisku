@@ -5,6 +5,7 @@ namespace App\Livewire\Approval;
 use App\Models\StockTransaction;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use App\Services\ApprovalService;
 use App\Models\AuditTrail;
 
 class Index extends Component
@@ -13,6 +14,7 @@ class Index extends Component
     public $rejectTransactionId = null;
     public $rejectReason = '';
     public $confirmApproveId = null;
+    protected $approvalService;
 
     protected $rules = [
         'rejectReason' => 'required|string|min:10',
@@ -22,6 +24,11 @@ class Index extends Component
         'rejectReason.required' => 'Alasan reject harus diisi',
         'rejectReason.min' => 'Alasan reject harus minimal 10 karakter',
     ];
+
+    public function __construct(ApprovalService $approvalService)
+    {
+        $this->approvalService = $approvalService;
+    }
 
     public function render()
     {
@@ -40,23 +47,16 @@ class Index extends Component
 
     public function approve($transactionId)
     {
-        $transaction = StockTransaction::findOrFail($transactionId);
+        try {
+            $transaction = StockTransaction::findOrFail($transactionId);
+            
+            $this->approvalService->approve($transaction, Auth::user());
 
-        // Business logic will be implemented in Phase 7b
-        // For now, just update status
-        $transaction->update(['status' => 'approved']);
-
-        AuditTrail::log(
-            Auth::user(),
-            'StockTransaction',
-            $transaction->id,
-            'approve',
-            ['status' => 'pending'],
-            ['status' => 'approved']
-        );
-
-        $this->confirmApproveId = null;
-        session()->flash('success', 'Transaksi berhasil di-approve');
+            $this->confirmApproveId = null;
+            session()->flash('success', 'Transaksi berhasil di-approve');
+        } catch (\Exception $e) {
+            session()->flash('error', $e->getMessage());
+        }
     }
 
     public function showRejectForm($transactionId)
@@ -68,31 +68,21 @@ class Index extends Component
 
     public function reject()
     {
-        $this->validate();
+        try {
+            $this->validate();
 
-        $transaction = StockTransaction::findOrFail($this->rejectTransactionId);
+            $transaction = StockTransaction::findOrFail($this->rejectTransactionId);
+            
+            $this->approvalService->reject($transaction, Auth::user(), $this->rejectReason);
 
-        // Business logic will be implemented in Phase 7b
-        // For now, just update status
-        $transaction->update([
-            'status' => 'rejected',
-            'notes' => $transaction->notes . ' | REJECTED: ' . $this->rejectReason,
-        ]);
+            $this->showRejectForm = false;
+            $this->rejectTransactionId = null;
+            $this->rejectReason = '';
 
-        AuditTrail::log(
-            Auth::user(),
-            'StockTransaction',
-            $transaction->id,
-            'reject',
-            ['status' => 'pending'],
-            ['status' => 'rejected', 'reject_reason' => $this->rejectReason]
-        );
-
-        $this->showRejectForm = false;
-        $this->rejectTransactionId = null;
-        $this->rejectReason = '';
-
-        session()->flash('success', 'Transaksi berhasil di-reject');
+            session()->flash('success', 'Transaksi berhasil di-reject');
+        } catch (\Exception $e) {
+            session()->flash('error', $e->getMessage());
+        }
     }
 
     public function cancelReject()
