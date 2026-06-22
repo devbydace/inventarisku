@@ -16,7 +16,7 @@ class Index extends Component
     public function render()
     {
         $products = Product::query()
-            ->with(['category', 'unit'])
+            ->with(['category', 'unit', 'suppliers'])
             ->where('is_active', true)
             ->when($this->search, function ($query) {
                 $query->where('name', 'like', '%' . $this->search . '%')
@@ -26,6 +26,26 @@ class Index extends Component
             ->paginate(50);
 
         return view('livewire.product.index', compact('products'));
+    }
+
+    public function archive($id)
+    {
+        $product = Product::findOrFail($id);
+        
+        $oldValues = $product->toArray();
+
+        AuditTrail::log(
+            Auth::user(),
+            'Product',
+            $product->id,
+            'delete',
+            $oldValues,
+            null
+        );
+
+        $product->delete(); // Soft delete
+
+        session()->flash('success', 'Produk berhasil di-archive');
     }
 
     public function delete($id)
@@ -45,6 +65,6 @@ class Index extends Component
 
         $product->forceDelete();
 
-        session()->flash('success', 'Produk berhasil dihapus');
+        session()->flash('success', 'Produk berhasil dihapus permanen');
     }
 }

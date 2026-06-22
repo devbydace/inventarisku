@@ -47,6 +47,18 @@
                                         Satuan
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Supplier
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Harga Beli
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Harga Jual
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Stok
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                         Aksi
                                     </th>
                                 </tr>
@@ -66,13 +78,37 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                                             {{ $product->unit->name ?? '-' }}
                                         </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                                            @if($product->suppliers->count() > 0)
+                                                {{ $product->suppliers->pluck('name')->join(', ') }}
+                                            @else
+                                                <span class="text-gray-400">-</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                                            Rp {{ number_format($product->buy_price, 0, ',', '.') }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                                            Rp {{ number_format($product->sell_price, 0, ',', '.') }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm @if($product->current_stock < $product->min_stock) text-red-600 font-bold @endif text-gray-900 dark:text-gray-100">
+                                            {{ $product->current_stock }} {{ $product->unit->abbreviation ?? '' }}
+                                            @if($product->current_stock < $product->min_stock)
+                                                <br><span class="text-xs">(Min: {{ $product->min_stock }})</span>
+                                            @endif
+                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <a href="{{ route('admin.products.edit', $product->id) }}" 
                                                class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 mr-3">
                                                 Edit
                                             </a>
+                                            <button wire:click="archive({{ $product->id }})" 
+                                                    wire:confirm="Apakah Anda yakin ingin archive produk ini?"
+                                                    class="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300 mr-3">
+                                                Archive
+                                            </button>
                                             <button wire:click="delete({{ $product->id }})" 
-                                                    wire:confirm="Apakah Anda yakin ingin menghapus produk ini?"
+                                                    wire:confirm="Apakah Anda yakin ingin menghapus permanen produk ini?"
                                                     class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
                                                 Delete
                                             </button>
@@ -80,7 +116,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                                        <td colspan="9" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
                                             Tidak ada data produk
                                         </td>
                                     </tr>
