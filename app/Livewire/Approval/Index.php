@@ -25,9 +25,9 @@ class Index extends Component
         'rejectReason.min' => 'Alasan reject harus minimal 10 karakter',
     ];
 
-    public function __construct(ApprovalService $approvalService)
+    public function boot()
     {
-        $this->approvalService = $approvalService;
+        $this->approvalService = new ApprovalService();
     }
 
     public function render()

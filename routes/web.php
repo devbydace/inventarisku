@@ -58,15 +58,14 @@ Route::middleware(['auth', 'user.active'])->group(function () {
 
     // Reports (all authenticated users with view-reports permission)
     Route::prefix('reports')->name('reports.')->middleware('permission:view-reports')->group(function () {
-        Route::get('/', function () {
-            return 'Reports - under construction';
-        });
-        Route::get('/stock', function () {
-            return 'Stock Report - under construction';
-        });
-        Route::get('/transactions', function () {
-            return 'Transaction Report - under construction';
-        });
+        Route::get('/', \App\Livewire\Report\StockOnHand::class)
+            ->name('index');
+        Route::get('/stock-on-hand', \App\Livewire\Report\StockOnHand::class)
+            ->name('stock-on-hand');
+        Route::get('/stock-mutation', \App\Livewire\Report\StockMutation::class)
+            ->name('stock-mutation');
+        Route::get('/low-stock', \App\Livewire\Report\LowStock::class)
+            ->name('low-stock');
     });
 });
 
