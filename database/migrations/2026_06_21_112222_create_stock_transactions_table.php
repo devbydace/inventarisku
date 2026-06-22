@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->enum('type', ['in', 'out', 'adjustment']);
             $table->integer('quantity');
+            $table->foreignId('supplier_id')->nullable()->constrained()->nullOnDelete();
             $table->string('reference_no', 100)->nullable();
             $table->text('notes')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');

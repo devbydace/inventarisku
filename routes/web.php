@@ -43,9 +43,8 @@ Route::middleware(['auth', 'user.active'])->group(function () {
 
     // Stock In/Out (all authenticated users with create-stock-in/out permission)
     Route::prefix('stock')->name('stock.')->group(function () {
-        Route::get('/in', function () {
-            return 'Stock In - under construction';
-        })->middleware('permission:create-stock-in');
+        Route::get('/in', \App\Livewire\Stock\In::class)
+            ->name('in')->middleware('permission:create-stock-in');
 
         Route::get('/out', function () {
             return 'Stock Out - under construction';

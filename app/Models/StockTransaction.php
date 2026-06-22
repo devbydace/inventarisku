@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class StockTransaction extends Model
 {
-    protected $fillable = ['product_id', 'user_id', 'type', 'quantity', 'reference_no', 'notes', 'status'];
+    protected $fillable = ['product_id', 'user_id', 'type', 'quantity', 'supplier_id', 'reference_no', 'notes', 'status'];
 
     public function product(): BelongsTo
     {
