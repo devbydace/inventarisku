@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('entity_type', 100);
             $table->unsignedBigInteger('entity_id');
-            $table->enum('action', ['create', 'update', 'delete']);
+            $table->enum('action', ['create', 'update', 'delete', 'approve', 'reject']);
             $table->json('old_values')->nullable();
             $table->json('new_values')->nullable();
             $table->index('user_id', 'idx_audit_trails_user_id');

@@ -128,9 +128,8 @@ Route::middleware(['auth', 'user.active', 'role:admin'])->prefix('admin')->name(
 |--------------------------------------------------------------------------
 | */
 Route::middleware(['auth', 'user.active', 'role:admin,manager,audit'])->prefix('approvals')->name('approvals.')->group(function () {
-    Route::get('/', function () {
-        return 'Approvals - under construction';
-    })->middleware('permission:approve-transaction');
+    Route::get('/', \App\Livewire\Approval\Index::class)
+        ->name('index')->middleware('permission:approve-transaction');
 });
 
 /*
