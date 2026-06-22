@@ -77,9 +77,14 @@ Route::middleware(['auth', 'user.active'])->group(function () {
 */
 Route::middleware(['auth', 'user.active', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     // Master Data Management
-    Route::get('/products', function () {
-        return 'Products - under construction';
-    })->name('products.index')->middleware('permission:manage-products');
+    Route::get('/products', \App\Livewire\Product\Index::class)
+        ->name('products.index')->middleware('permission:manage-products');
+
+    Route::get('/products/create', \App\Livewire\Product\Create::class)
+        ->name('products.create')->middleware('permission:manage-products');
+
+    Route::get('/products/{id}/edit', \App\Livewire\Product\Edit::class)
+        ->name('products.edit')->middleware('permission:manage-products');
 
     Route::get('/categories', \App\Livewire\Category\Index::class)
         ->name('categories.index')->middleware('permission:manage-categories');
