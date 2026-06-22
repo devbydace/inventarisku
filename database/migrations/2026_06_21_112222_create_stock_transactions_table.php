@@ -18,6 +18,7 @@ return new class extends Migration
             $table->enum('type', ['in', 'out', 'adjustment']);
             $table->integer('quantity');
             $table->foreignId('supplier_id')->nullable()->constrained()->nullOnDelete();
+            $table->string('reason', 50)->nullable();
             $table->string('reference_no', 100)->nullable();
             $table->text('notes')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');

@@ -46,9 +46,8 @@ Route::middleware(['auth', 'user.active'])->group(function () {
         Route::get('/in', \App\Livewire\Stock\In::class)
             ->name('in')->middleware('permission:create-stock-in');
 
-        Route::get('/out', function () {
-            return 'Stock Out - under construction';
-        })->middleware('permission:create-stock-out');
+        Route::get('/out', \App\Livewire\Stock\Out::class)
+            ->name('out')->middleware('permission:create-stock-out');
 
         Route::get('/adjustment', function () {
             return 'Stock Adjustment - under construction';
