@@ -81,17 +81,27 @@ Route::middleware(['auth', 'user.active', 'role:admin'])->prefix('admin')->name(
         return 'Products - under construction';
     })->name('products.index')->middleware('permission:manage-products');
 
-    Route::get('/categories', function () {
-        return 'Categories - under construction';
-    })->name('categories.index')->middleware('permission:manage-categories');
+    Route::get('/categories', \App\Livewire\Category\Index::class)
+        ->name('categories.index')->middleware('permission:manage-categories');
+
+    Route::get('/categories/create', \App\Livewire\Category\Create::class)
+        ->name('categories.create')->middleware('permission:manage-categories');
+
+    Route::get('/categories/{id}/edit', \App\Livewire\Category\Edit::class)
+        ->name('categories.edit')->middleware('permission:manage-categories');
 
     Route::get('/suppliers', function () {
         return 'Suppliers - under construction';
     })->name('suppliers.index')->middleware('permission:manage-suppliers');
 
-    Route::get('/units', function () {
-        return 'Units - under construction';
-    })->name('units.index')->middleware('permission:manage-units');
+    Route::get('/units', \App\Livewire\Unit\Index::class)
+        ->name('units.index')->middleware('permission:manage-units');
+
+    Route::get('/units/create', \App\Livewire\Unit\Create::class)
+        ->name('units.create')->middleware('permission:manage-units');
+
+    Route::get('/units/{id}/edit', \App\Livewire\Unit\Edit::class)
+        ->name('units.edit')->middleware('permission:manage-units');
 
     // User Management
     Route::get('/users', function () {
