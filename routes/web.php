@@ -48,10 +48,12 @@ Route::middleware(['auth', 'user.active'])->group(function () {
 
         Route::get('/out', \App\Livewire\Stock\Out::class)
             ->name('out')->middleware('permission:create-stock-out');
+    });
 
-        Route::get('/adjustment', function () {
-            return 'Stock Adjustment - under construction';
-        })->middleware('permission:create-stock-adjustment');
+    // Stock Adjustment (only admin, manager, audit with permission)
+    Route::middleware(['role:admin,manager,audit'])->prefix('stock')->name('stock.')->group(function () {
+        Route::get('/adjustment', \App\Livewire\Stock\Adjustment::class)
+            ->name('adjustment')->middleware('permission:create-stock-adjustment');
     });
 
     // Reports (all authenticated users with view-reports permission)
