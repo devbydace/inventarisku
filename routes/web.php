@@ -90,9 +90,14 @@ Route::middleware(['auth', 'user.active', 'role:admin'])->prefix('admin')->name(
     Route::get('/categories/{id}/edit', \App\Livewire\Category\Edit::class)
         ->name('categories.edit')->middleware('permission:manage-categories');
 
-    Route::get('/suppliers', function () {
-        return 'Suppliers - under construction';
-    })->name('suppliers.index')->middleware('permission:manage-suppliers');
+    Route::get('/suppliers', \App\Livewire\Supplier\Index::class)
+        ->name('suppliers.index')->middleware('permission:manage-suppliers');
+
+    Route::get('/suppliers/create', \App\Livewire\Supplier\Create::class)
+        ->name('suppliers.create')->middleware('permission:manage-suppliers');
+
+    Route::get('/suppliers/{id}/edit', \App\Livewire\Supplier\Edit::class)
+        ->name('suppliers.edit')->middleware('permission:manage-suppliers');
 
     Route::get('/units', \App\Livewire\Unit\Index::class)
         ->name('units.index')->middleware('permission:manage-units');
